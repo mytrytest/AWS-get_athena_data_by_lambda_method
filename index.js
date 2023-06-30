@@ -1,20 +1,20 @@
 const AWS = require('aws-sdk');
 
 exports.handler = async (event, context) => {
-  // Set up AWS SDK configuration
-  AWS.config.update({ region: 'your-region' });
+  // AWS SDK configuration
+  AWS.config.update({ region: process.env.REGION });
 
   // Create a new Athena service object
   const athena = new AWS.Athena();
 
   // Set up the parameters for the Athena API call
   const params = {
-    QueryString: 'SELECT * FROM table_name limit 10',
+    QueryString: 'SELECT * FROM '+process.env.ATHENA_TABLE_NAME+' limit 5',
     ResultConfiguration: {
-      OutputLocation: 's3://QueryResultsBucket/folder-name/'
+      OutputLocation: process.env.OUTPUT_S3_BUCKET_PATH
     },
     QueryExecutionContext: {
-      Database: 'your-database-name'
+      Database: process.env.ATHENA_DB_NAME
     }
   };
 
